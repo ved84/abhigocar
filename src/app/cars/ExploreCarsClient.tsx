@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Vehicle } from "@/types";
 import { BIHAR_DISTRICTS } from "@/data/districts";
 import { VehicleCard } from "@/components/VehicleCard";
@@ -40,7 +40,7 @@ export function ExploreCarsClient({
   initialEndDate?: string;
 }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
@@ -53,8 +53,8 @@ export function ExploreCarsClient({
   const [seats, setSeats] = useState(initialSeats || "ALL");
   const [sort, setSort] = useState(initialSort || "newest");
   const [searchTerm, setSearchTerm] = useState(initialSearch || "");
-  const [startDate, setStartDate] = useState(initialStartDate || "");
-  const [endDate, setEndDate] = useState(initialEndDate || "");
+  const [startDate] = useState(initialStartDate || "");
+  const [endDate] = useState(initialEndDate || "");
 
   const applyFilters = (overrides?: Record<string, string>) => {
     const params = new URLSearchParams();
@@ -67,8 +67,6 @@ export function ExploreCarsClient({
     const s = overrides?.seats !== undefined ? overrides.seats : seats;
     const so = overrides?.sort !== undefined ? overrides.sort : sort;
     const q = overrides?.search !== undefined ? overrides.search : searchTerm;
-    const sd = overrides?.startDate !== undefined ? overrides.startDate : startDate;
-    const ed = overrides?.endDate !== undefined ? overrides.endDate : endDate;
 
     if (d && d !== "ALL") params.set("district", d);
     if (c && c !== "ALL") params.set("category", c);
@@ -78,8 +76,8 @@ export function ExploreCarsClient({
     if (s && s !== "ALL") params.set("seats", s);
     if (so) params.set("sort", so);
     if (q) params.set("search", q);
-    if (sd) params.set("startDate", sd);
-    if (ed) params.set("endDate", ed);
+    if (startDate) params.set("startDate", startDate);
+    if (endDate) params.set("endDate", endDate);
 
     startTransition(() => {
       router.push(`/cars?${params.toString()}`);
@@ -95,8 +93,6 @@ export function ExploreCarsClient({
     setSeats("ALL");
     setSort("newest");
     setSearchTerm("");
-    setStartDate("");
-    setEndDate("");
 
     startTransition(() => {
       router.push("/cars");
@@ -104,19 +100,19 @@ export function ExploreCarsClient({
   };
 
   return (
-    <div>
-      {/* Top Bar */}
-      <div className="bg-[#181E19] rounded-xl border border-[#2B352E] p-4 mb-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="text-[#F1F4F7]">
+      {/* Top Bar with Glass Panel */}
+      <div className="glass-panel rounded-2xl p-4 mb-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4 border border-white/10">
         {/* Search Input */}
         <div className="relative flex-grow max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8E9991]" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8F9CA8]" />
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && applyFilters()}
-            placeholder="Search car make, model, or locality (e.g. Swift, Danapur)..."
-            className="w-full h-10 pl-9 pr-4 text-xs sm:text-sm bg-[#101411] border border-[#2B352E] rounded-md text-[#EEF0EB] focus:outline-none focus:border-[#387F66]"
+            placeholder="Search make, model, or city (e.g. Swift, Danapur, City)..."
+            className="w-full h-11 pl-10 pr-4 text-xs sm:text-sm glass-input rounded-xl placeholder-[#5A6672]"
           />
         </div>
 
@@ -124,31 +120,30 @@ export function ExploreCarsClient({
         <div className="flex items-center justify-between md:justify-end gap-3">
           <button
             onClick={() => setMobileFilterOpen(true)}
-            className="md:hidden inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-md border border-[#2B352E] bg-[#101411] text-[#EEF0EB]"
+            className="md:hidden inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl glass-pill text-white"
           >
-            <SlidersHorizontal className="w-4 h-4 text-[#387F66]" />
+            <SlidersHorizontal className="w-4 h-4 text-[#E03E36]" />
             <span>Filters</span>
           </button>
 
-          <span className="text-xs text-[#8E9991] hidden sm:inline">
-            Showing <strong className="text-[#EEF0EB]">{initialVehicles.length}</strong> available cars
+          <span className="text-xs text-[#8F9CA8] hidden sm:inline">
+            Showing <strong className="text-white">{initialVehicles.length}</strong> verified cars
           </span>
 
           {/* Sort Selector */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-[#8E9991] hidden lg:inline">Sort:</span>
+            <span className="text-xs text-[#8F9CA8] hidden lg:inline">Sort:</span>
             <select
               value={sort}
               onChange={(e) => {
                 setSort(e.target.value);
                 applyFilters({ sort: e.target.value });
               }}
-              className="h-10 px-3 text-xs bg-[#101411] border border-[#2B352E] rounded-md text-[#EEF0EB] focus:outline-none focus:border-[#387F66]"
+              className="h-11 px-3 text-xs glass-input rounded-xl cursor-pointer"
             >
-              <option value="newest">Newest Fleet First</option>
-              <option value="price_asc">Price: Low to High</option>
-              <option value="price_desc">Price: High to Low</option>
-              <option value="seats_desc">Seats: Most Capacity</option>
+              <option value="newest" className="bg-[#141A20] text-white">Newest Fleet First</option>
+              <option value="seats_desc" className="bg-[#141A20] text-white">Seats: 7+ Passenger</option>
+              <option value="seats_asc" className="bg-[#141A20] text-white">Seats: Compact (4-5)</option>
             </select>
           </div>
         </div>
@@ -157,15 +152,15 @@ export function ExploreCarsClient({
       {/* Main Grid: Sidebar + Results */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
         {/* Desktop Sidebar Filters */}
-        <aside className="hidden md:block md:col-span-4 lg:col-span-3 bg-[#181E19] p-5 rounded-xl border border-[#2B352E] space-y-5 shadow-xs sticky top-24">
-          <div className="flex items-center justify-between pb-3 border-b border-[#2B352E]">
-            <h3 className="font-serif text-sm font-bold text-[#EEF0EB] flex items-center gap-2">
-              <Filter className="w-4 h-4 text-[#387F66]" />
+        <aside className="hidden md:block md:col-span-4 lg:col-span-3 glass-panel p-6 rounded-2xl space-y-5 shadow-xl sticky top-24 border border-white/10">
+          <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+            <h3 className="font-display text-sm font-bold text-white flex items-center gap-2">
+              <Filter className="w-4 h-4 text-[#E03E36]" />
               Filter Fleet
             </h3>
             <button
               onClick={handleReset}
-              className="text-xs text-[#8E9991] hover:text-[#387F66] flex items-center gap-1 transition-colors"
+              className="text-xs text-[#8F9CA8] hover:text-[#FF6B64] flex items-center gap-1 transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3 h-3" />
               Reset
@@ -174,17 +169,17 @@ export function ExploreCarsClient({
 
           {/* District */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-[#8E9991] block text-[11px]">
+            <label className="text-xs font-bold uppercase tracking-wider text-[#8F9CA8] block text-[11px]">
               District
             </label>
             <select
               value={district}
               onChange={(e) => setDistrict(e.target.value)}
-              className="w-full h-9 px-2.5 text-xs bg-[#101411] border border-[#2B352E] rounded-md text-[#EEF0EB]"
+              className="w-full h-10 px-3 text-xs glass-input rounded-xl cursor-pointer"
             >
-              <option value="ALL">All 38 Districts</option>
+              <option value="ALL" className="bg-[#141A20] text-white">All 38 Districts</option>
               {BIHAR_DISTRICTS.map((d) => (
-                <option key={d.slug} value={d.slug}>
+                <option key={d.slug} value={d.slug} className="bg-[#141A20] text-white">
                   {d.name} {d.isPopular ? "★" : ""}
                 </option>
               ))}
@@ -193,80 +188,80 @@ export function ExploreCarsClient({
 
           {/* Vehicle Category */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-[#8E9991] block text-[11px]">
+            <label className="text-xs font-bold uppercase tracking-wider text-[#8F9CA8] block text-[11px]">
               Category
             </label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full h-9 px-2.5 text-xs bg-[#101411] border border-[#2B352E] rounded-md text-[#EEF0EB]"
+              className="w-full h-10 px-3 text-xs glass-input rounded-xl cursor-pointer"
             >
-              <option value="ALL">All Categories</option>
-              <option value="HATCHBACK">Hatchback</option>
-              <option value="SEDAN">Sedan</option>
-              <option value="COMPACT_SUV">Compact SUV</option>
-              <option value="SUV">SUV & 4x4</option>
-              <option value="MUV_MPV">MUV / MPV (7-Seater)</option>
-              <option value="PREMIUM_SUV">Premium SUV</option>
-              <option value="ELECTRIC">Electric (EV)</option>
-              <option value="WEDDING_EVENT">Wedding & VIP</option>
+              <option value="ALL" className="bg-[#141A20] text-white">All Categories</option>
+              <option value="HATCHBACK" className="bg-[#141A20] text-white">Hatchback</option>
+              <option value="SEDAN" className="bg-[#141A20] text-white">Sedan</option>
+              <option value="COMPACT_SUV" className="bg-[#141A20] text-white">Compact SUV</option>
+              <option value="SUV" className="bg-[#141A20] text-white">SUV & 4x4</option>
+              <option value="MUV_MPV" className="bg-[#141A20] text-white">MUV / MPV (7-Seater)</option>
+              <option value="PREMIUM_SUV" className="bg-[#141A20] text-white">Premium SUV</option>
+              <option value="ELECTRIC" className="bg-[#141A20] text-white">Electric (EV)</option>
+              <option value="WEDDING_EVENT" className="bg-[#141A20] text-white">Wedding & VIP</option>
             </select>
           </div>
 
           {/* Rental Mode */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-[#8E9991] block text-[11px]">
+            <label className="text-xs font-bold uppercase tracking-wider text-[#8F9CA8] block text-[11px]">
               Drive Preference
             </label>
             <select
               value={mode}
               onChange={(e) => setMode(e.target.value)}
-              className="w-full h-9 px-2.5 text-xs bg-[#101411] border border-[#2B352E] rounded-md text-[#EEF0EB]"
+              className="w-full h-10 px-3 text-xs glass-input rounded-xl cursor-pointer"
             >
-              <option value="ALL">Any Mode</option>
-              <option value="SELF_DRIVE">Self-Drive</option>
-              <option value="CHAUFFEUR_DRIVEN">Chauffeur-Driven</option>
+              <option value="ALL" className="bg-[#141A20] text-white">Any Mode</option>
+              <option value="SELF_DRIVE" className="bg-[#141A20] text-white">Self-Drive</option>
+              <option value="CHAUFFEUR_DRIVEN" className="bg-[#141A20] text-white">Chauffeur-Driven</option>
             </select>
           </div>
 
           {/* Transmission */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-[#8E9991] block text-[11px]">
+            <label className="text-xs font-bold uppercase tracking-wider text-[#8F9CA8] block text-[11px]">
               Transmission
             </label>
             <select
               value={transmission}
               onChange={(e) => setTransmission(e.target.value)}
-              className="w-full h-9 px-2.5 text-xs bg-[#101411] border border-[#2B352E] rounded-md text-[#EEF0EB]"
+              className="w-full h-10 px-3 text-xs glass-input rounded-xl cursor-pointer"
             >
-              <option value="ALL">Any Transmission</option>
-              <option value="MANUAL">Manual</option>
-              <option value="AUTOMATIC">Automatic</option>
+              <option value="ALL" className="bg-[#141A20] text-white">Any Transmission</option>
+              <option value="MANUAL" className="bg-[#141A20] text-white">Manual</option>
+              <option value="AUTOMATIC" className="bg-[#141A20] text-white">Automatic</option>
             </select>
           </div>
 
           {/* Fuel Type */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-[#8E9991] block text-[11px]">
+            <label className="text-xs font-bold uppercase tracking-wider text-[#8F9CA8] block text-[11px]">
               Fuel Type
             </label>
             <select
               value={fuel}
               onChange={(e) => setFuel(e.target.value)}
-              className="w-full h-9 px-2.5 text-xs bg-[#101411] border border-[#2B352E] rounded-md text-[#EEF0EB]"
+              className="w-full h-10 px-3 text-xs glass-input rounded-xl cursor-pointer"
             >
-              <option value="ALL">Any Fuel</option>
-              <option value="PETROL">Petrol</option>
-              <option value="DIESEL">Diesel</option>
-              <option value="CNG">CNG</option>
-              <option value="ELECTRIC">Electric</option>
+              <option value="ALL" className="bg-[#141A20] text-white">Any Fuel</option>
+              <option value="PETROL" className="bg-[#141A20] text-white">Petrol</option>
+              <option value="DIESEL" className="bg-[#141A20] text-white">Diesel</option>
+              <option value="CNG" className="bg-[#141A20] text-white">CNG</option>
+              <option value="ELECTRIC" className="bg-[#141A20] text-white">Electric</option>
             </select>
           </div>
 
           {/* Minimum Seats */}
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold uppercase tracking-wider text-[#8E9991] block text-[11px]">
-              Capacity
+            <label className="text-xs font-bold uppercase tracking-wider text-[#8F9CA8] block text-[11px]">
+              Seating Capacity
             </label>
             <div className="grid grid-cols-3 gap-1.5">
               {["ALL", "5", "7"].map((s) => (
@@ -274,10 +269,10 @@ export function ExploreCarsClient({
                   key={s}
                   type="button"
                   onClick={() => setSeats(s)}
-                  className={`py-1.5 text-xs font-medium rounded-md border ${
+                  className={`py-2 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                     seats === s
-                      ? "bg-[#2D6A54] text-white border-[#2D6A54]"
-                      : "bg-[#101411] text-[#EEF0EB] border-[#2B352E]"
+                      ? "bg-[#C63832] text-white shadow-md border border-red-400/30"
+                      : "glass-card text-[#8F9CA8] hover:text-white"
                   }`}
                 >
                   {s === "ALL" ? "Any" : `${s}+ Seats`}
@@ -289,7 +284,7 @@ export function ExploreCarsClient({
           {/* Apply Button */}
           <button
             onClick={() => applyFilters()}
-            className="w-full py-2.5 rounded-md bg-[#2D6A54] hover:bg-[#387F66] text-white text-xs font-bold transition-colors shadow-xs"
+            className="w-full py-3 rounded-xl bg-gradient-to-r from-[#C63832] to-[#B02E28] hover:from-[#E03E36] hover:to-[#C63832] text-white text-xs font-bold transition-all shadow-md shadow-red-950/40 border border-red-400/30 cursor-pointer"
           >
             Apply Filters
           </button>
@@ -298,21 +293,21 @@ export function ExploreCarsClient({
         {/* Listings Grid */}
         <main className="md:col-span-8 lg:col-span-9">
           {initialVehicles.length === 0 ? (
-            <div className="bg-[#181E19] rounded-xl border border-[#2B352E] p-12 text-center space-y-4">
-              <div className="w-12 h-12 rounded-full bg-[#101411] text-[#387F66] flex items-center justify-center mx-auto">
+            <div className="bg-[#141A1F] rounded-xl border border-[#242D35] p-12 text-center space-y-4 shadow-md">
+              <div className="w-12 h-12 rounded-full bg-[#0E1216] text-[#C63832] flex items-center justify-center mx-auto border border-[#242D35]">
                 <Car className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-serif text-lg font-bold text-[#EEF0EB]">
+                <h3 className="font-serif text-lg font-bold text-white">
                   No vehicles match the selected criteria
                 </h3>
-                <p className="text-xs text-[#8E9991] max-w-sm mx-auto mt-1">
-                  Try clearing specific filters, or message directly on WhatsApp: +91 93540 35140.
+                <p className="text-xs text-[#8F9CA8] max-w-sm mx-auto mt-1">
+                  Try clearing specific filters, or message directly on WhatsApp: +91 85389 18819.
                 </p>
               </div>
               <button
                 onClick={handleReset}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-md bg-[#2D6A54] text-white hover:bg-[#387F66]"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-md bg-[#C63832] text-white hover:bg-[#E03E36]"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 Reset Filters
@@ -330,13 +325,13 @@ export function ExploreCarsClient({
 
       {/* Mobile Drawer */}
       {mobileFilterOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 flex justify-end">
-          <div className="w-full max-w-xs bg-[#181E19] h-full p-5 overflow-y-auto space-y-5 border-l border-[#2B352E]">
-            <div className="flex items-center justify-between pb-3 border-b border-[#2B352E]">
-              <h3 className="font-serif text-base font-bold text-[#EEF0EB]">Filters</h3>
+        <div className="fixed inset-0 z-50 bg-black/70 flex justify-end">
+          <div className="w-full max-w-xs bg-[#141A1F] h-full p-5 overflow-y-auto space-y-5 border-l border-[#242D35] text-[#F1F4F7]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#242D35]">
+              <h3 className="font-serif text-base font-bold text-white">Filters</h3>
               <button
                 onClick={() => setMobileFilterOpen(false)}
-                className="p-1 rounded-md text-[#8E9991]"
+                className="p-1 rounded-md text-[#8F9CA8] hover:text-white"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -344,13 +339,13 @@ export function ExploreCarsClient({
 
             <div className="space-y-4 text-xs">
               <div>
-                <label className="font-semibold uppercase tracking-wider text-[#8E9991] block mb-1">
+                <label className="font-bold uppercase tracking-wider text-[#8F9CA8] block mb-1">
                   District
                 </label>
                 <select
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
-                  className="w-full h-9 px-2 border border-[#2B352E] rounded-md bg-[#101411] text-[#EEF0EB]"
+                  className="w-full h-9 px-2.5 text-xs bg-[#0E1216] border border-[#242D35] rounded-md text-[#F1F4F7]"
                 >
                   <option value="ALL">All 38 Districts</option>
                   {BIHAR_DISTRICTS.map((d) => (
@@ -362,58 +357,48 @@ export function ExploreCarsClient({
               </div>
 
               <div>
-                <label className="font-semibold uppercase tracking-wider text-[#8E9991] block mb-1">
+                <label className="font-bold uppercase tracking-wider text-[#8F9CA8] block mb-1">
                   Category
                 </label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full h-9 px-2 border border-[#2B352E] rounded-md bg-[#101411] text-[#EEF0EB]"
+                  className="w-full h-9 px-2.5 text-xs bg-[#0E1216] border border-[#242D35] rounded-md text-[#F1F4F7]"
                 >
                   <option value="ALL">All Categories</option>
                   <option value="HATCHBACK">Hatchback</option>
                   <option value="SEDAN">Sedan</option>
-                  <option value="SUV">SUV</option>
-                  <option value="MUV_MPV">MUV / MPV</option>
-                  <option value="ELECTRIC">Electric</option>
-                  <option value="WEDDING_EVENT">Wedding & VIP</option>
+                  <option value="COMPACT_SUV">Compact SUV</option>
+                  <option value="SUV">SUV & 4x4</option>
+                  <option value="MUV_MPV">MUV / MPV (7-Seater)</option>
+                  <option value="PREMIUM_SUV">Premium SUV</option>
+                  <option value="ELECTRIC">Electric (EV)</option>
                 </select>
               </div>
 
               <div>
-                <label className="font-semibold uppercase tracking-wider text-[#8E9991] block mb-1">
-                  Mode
+                <label className="font-bold uppercase tracking-wider text-[#8F9CA8] block mb-1">
+                  Drive Preference
                 </label>
                 <select
                   value={mode}
                   onChange={(e) => setMode(e.target.value)}
-                  className="w-full h-9 px-2 border border-[#2B352E] rounded-md bg-[#101411] text-[#EEF0EB]"
+                  className="w-full h-9 px-2.5 text-xs bg-[#0E1216] border border-[#242D35] rounded-md text-[#F1F4F7]"
                 >
                   <option value="ALL">Any Mode</option>
                   <option value="SELF_DRIVE">Self-Drive</option>
                   <option value="CHAUFFEUR_DRIVEN">Chauffeur-Driven</option>
                 </select>
               </div>
-            </div>
 
-            <div className="pt-4 border-t border-[#2B352E] flex gap-2">
-              <button
-                onClick={() => {
-                  handleReset();
-                  setMobileFilterOpen(false);
-                }}
-                className="flex-1 py-2 text-xs font-semibold border border-[#2B352E] rounded-md bg-[#101411] text-[#EEF0EB]"
-              >
-                Reset
-              </button>
               <button
                 onClick={() => {
                   applyFilters();
                   setMobileFilterOpen(false);
                 }}
-                className="flex-1 py-2 text-xs font-semibold bg-[#2D6A54] text-white rounded-md"
+                className="w-full py-2.5 rounded-md bg-[#C63832] text-white text-xs font-bold"
               >
-                Apply
+                Apply Filters
               </button>
             </div>
           </div>

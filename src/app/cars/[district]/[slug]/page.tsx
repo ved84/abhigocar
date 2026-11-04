@@ -48,20 +48,20 @@ export default async function CarDetailPage({
   const district = findDistrict(vehicle.districtId);
 
   return (
-    <div className="py-8 sm:py-12">
+    <div className="py-8 sm:py-12 bg-[#0E1216] text-[#F1F4F7]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs text-[#626A64]">
-          <Link href="/cars" className="hover:text-[#285746] flex items-center gap-1">
+        <div className="flex items-center gap-2 text-xs text-[#8F9CA8]">
+          <Link href="/cars" className="hover:text-[#C63832] flex items-center gap-1 transition-colors">
             <ArrowLeft className="w-3.5 h-3.5" />
             All Cars
           </Link>
           <span>/</span>
-          <Link href={`/cars/${vehicle.districtId}`} className="hover:text-[#285746] capitalize">
+          <Link href={`/cars/${vehicle.districtId}`} className="hover:text-[#C63832] capitalize transition-colors">
             {district ? district.name : vehicle.districtId}
           </Link>
           <span>/</span>
-          <span className="text-[#202622] font-semibold">
+          <span className="text-white font-semibold">
             {vehicle.make} {vehicle.model}
           </span>
         </div>

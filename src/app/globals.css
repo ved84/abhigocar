@@ -1,40 +1,120 @@
 @import "tailwindcss";
 
+@theme {
+  --font-display: var(--font-display), "Outfit", system-ui, sans-serif;
+  --font-sans: var(--font-sans), "Plus Jakarta Sans", system-ui, sans-serif;
+  --color-charcoal: #0E1216;
+  --color-charcoal-surface: #141A20;
+  --color-charcoal-elevated: #1B222A;
+  --color-racing-red: #C63832;
+  --color-racing-red-hover: #E03E36;
+  --color-racing-red-glow: rgba(198, 56, 50, 0.25);
+  --color-bg-main: #0E1216;
+  --color-card-surface: #141A20;
+  --color-card-surface-elevated: #1B222A;
+  --color-text-main: #F1F4F7;
+  --color-text-muted: #8F9CA8;
+  --color-border-subtle: #242D35;
+  --color-border-glass: rgba(255, 255, 255, 0.08);
+  --color-border-elevated: #313C47;
+}
+
 :root {
-  --background: #101411;
-  --foreground: #EEF0EB;
-  --surface: #181E19;
-  --surface-raised: #212923;
-  --border: #2B352E;
-  --border-light: #3A473E;
-  --primary: #2D6A54;
-  --primary-hover: #387F66;
-  --primary-light: #162E24;
-  --accent: #D4A359;
-  --accent-hover: #C29248;
-  --muted: #8E9991;
-  --muted-light: #B4BDB7;
+  --primary-dark: #0E1216;
+  --primary-surface: #141A20;
+  --brand-red: #C63832;
+  --brand-red-hover: #E03E36;
+  --bg-main: #0E1216;
+  --text-main: #F1F4F7;
+  --text-secondary: #8F9CA8;
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: #0E1216;
+  color: #F1F4F7;
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Custom Dark Scrollbar */
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  background: rgba(20, 26, 32, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.glass-card {
+  background: rgba(22, 28, 36, 0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  background: rgba(26, 34, 44, 0.75);
+  border-color: rgba(198, 56, 50, 0.45);
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.6), 0 0 24px -2px rgba(198, 56, 50, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-input {
+  background: rgba(12, 16, 20, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #F1F4F7;
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  background: rgba(14, 18, 23, 0.9);
+  border-color: #C63832;
+  box-shadow: 0 0 0 2px rgba(198, 56, 50, 0.25);
+  outline: none;
+}
+
+/* Automotive ambient background glow */
+.ambient-glow-red {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(198, 56, 50, 0.16) 0%, rgba(198, 56, 50, 0.03) 45%, transparent 70%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Dark automotive scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #101411;
+  background: #0E1216;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2B352E;
+  background: #242D35;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3A473E;
+  background: #374450;
 }

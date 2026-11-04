@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Newsreader } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 const jakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -10,18 +17,12 @@ const jakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  display: "swap",
-  style: ["normal", "italic"],
-});
-
 export const metadata: Metadata = {
-  title: "BiharDrive | Authentic Car Rentals Across All 38 Bihar Districts",
+  title: "AbhigoCar | Premium Car Rentals in Bihar - Direct WhatsApp Booking",
   description:
-    "Production vehicle rental marketplace for Bihar, India. Rent verified Hatchbacks, Sedans, SUVs, and Luxury vehicles for Self-Drive or Chauffeur services.",
+    "Rent verified self-drive hatchbacks, executive sedans, 4x4 SUVs, and family MUVs across Patna, Gaya, Muzaffarpur, Darbhanga, and all 38 districts of Bihar. Instant WhatsApp booking: +91 85389 18819.",
   keywords: [
+    "AbhigoCar",
     "Bihar car rental",
     "self drive cars Patna",
     "car rental Gaya",
@@ -29,10 +30,10 @@ export const metadata: Metadata = {
     "wedding luxury car Bihar",
     "car hire Darbhanga",
   ],
-  authors: [{ name: "BiharDrive Team" }],
+  authors: [{ name: "AbhigoCar Team" }],
   openGraph: {
-    title: "BiharDrive - Your Next Drive Starts in Bihar",
-    description: "Explore verified cars across Patna, Gaya, Muzaffarpur, Bhagalpur, and all 38 districts.",
+    title: "AbhigoCar - Premium Car Rentals in Bihar",
+    description: "Explore verified cars across Patna, Gaya, Muzaffarpur, Bhagalpur, and all 38 districts with instant WhatsApp booking.",
     type: "website",
     locale: "en_IN",
   },
@@ -44,8 +45,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${jakartaSans.variable} ${newsreader.variable}`}>
-      <body className="min-h-screen flex flex-col bg-[#101411] text-[#EEF0EB]">
+    <html lang="en" suppressHydrationWarning className={`${outfit.variable} ${jakartaSans.variable}`}>
+      <body suppressHydrationWarning className="min-h-screen flex flex-col bg-[#0E1216] text-[#F1F4F7] selection:bg-[#C63832] selection:text-white">
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />

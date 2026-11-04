@@ -64,23 +64,24 @@ export default function ExploreCarsPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   return (
-    <div className="py-8 sm:py-12">
+    <div className="py-8 sm:py-12 bg-[#0E1216] text-[#F1F4F7]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-6">
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#20493A]">
+        <div className="mb-8">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#FF6B64] flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#E03E36]" />
             Regional Fleet Directory
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold text-[#1C221E] mt-1">
-            Explore verified cars in Bihar
+          <h1 className="font-display text-3xl sm:text-5xl font-extrabold text-white mt-1">
+            Explore Verified Cars in Bihar
           </h1>
-          <p className="text-xs sm:text-sm text-[#59615B] mt-1">
-            Transparent INR pricing, included 250 km/day, and direct WhatsApp dispatch.
+          <p className="text-xs sm:text-sm text-[#8F9CA8] mt-1 max-w-xl">
+            Commercial yellow-plate fleet with 250 km/day included and instant WhatsApp booking.
           </p>
         </div>
 
         <Suspense
           fallback={
-            <div className="py-16 text-center text-xs text-[#59615B]">
+            <div className="py-16 text-center text-xs text-[#8F9CA8]">
               Loading fleet listings...
             </div>
           }

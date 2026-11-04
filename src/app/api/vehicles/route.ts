@@ -96,7 +96,7 @@ export async function POST(req: Request) {
             {
               id: `img-${Date.now()}`,
               vehicleId: "",
-              url: "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=1200&q=80",
+              url: "/cars/maruti-swift.jpg",
               isCover: true,
               sortOrder: 1,
             },

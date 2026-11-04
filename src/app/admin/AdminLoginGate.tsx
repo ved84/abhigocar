@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Lock, Shield, ArrowRight, AlertCircle } from "lucide-react";
+import { Lock, Shield, AlertCircle } from "lucide-react";
 
 export function AdminLoginGate() {
   const [password, setPassword] = useState("");
@@ -34,31 +34,32 @@ export function AdminLoginGate() {
   };
 
   return (
-    <div className="py-20 flex items-center justify-center text-[#EEF0EB]">
-      <div className="max-w-md w-full mx-auto px-4">
-        <div className="bg-[#181E19] rounded-xl border border-[#2B352E] p-8 shadow-sm space-y-6">
+    <div className="py-20 flex items-center justify-center bg-[#0E1216] min-h-[70vh] relative">
+      <div className="ambient-glow-red" />
+      <div className="max-w-md w-full mx-auto px-4 relative z-10">
+        <div className="glass-panel rounded-2xl p-8 shadow-2xl space-y-6 text-[#F1F4F7] border border-white/10">
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-lg bg-[#2D6A54] text-white flex items-center justify-center mx-auto shadow-xs">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#C63832] to-[#9B1E19] text-white flex items-center justify-center mx-auto shadow-lg shadow-red-950/50 border border-white/10">
               <Lock className="w-6 h-6 text-white" />
             </div>
-            <h1 className="font-serif text-2xl font-bold text-[#EEF0EB]">
+            <h1 className="font-display text-2xl font-extrabold text-white">
               Admin Fleet Console
             </h1>
-            <p className="text-xs text-[#8E9991]">
-              Enter your admin password to manage cars, visibility, and regional fleet controls.
+            <p className="text-xs text-[#8F9CA8]">
+              Enter your master password to manage cars, toggle public website visibility, and control fleet settings.
             </p>
           </div>
 
           {errorMsg && (
-            <div className="p-3 rounded-md bg-rose-950/40 border border-rose-800 text-rose-300 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+            <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-800 text-rose-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div className="space-y-1.5">
-              <label className="font-semibold text-[#EEF0EB] block">
+              <label className="font-bold text-white block">
                 Admin Master Password
               </label>
               <input
@@ -66,7 +67,7 @@ export function AdminLoginGate() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password..."
-                className="w-full h-11 px-3 bg-[#101411] border border-[#2B352E] rounded-md text-[#EEF0EB] focus:outline-none focus:border-[#387F66]"
+                className="w-full h-11 px-3 glass-input rounded-xl text-white"
                 required
                 autoFocus
               />
@@ -75,15 +76,15 @@ export function AdminLoginGate() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-md bg-[#2D6A54] hover:bg-[#387F66] text-white text-xs font-bold transition-all shadow-xs flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#C63832] to-[#B02E28] hover:from-[#E03E36] hover:to-[#C63832] text-white text-xs font-bold transition-all shadow-md shadow-red-950/40 border border-red-400/20 flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
             >
               <Shield className="w-4 h-4" />
               <span>{loading ? "Verifying..." : "Unlock Admin Console"}</span>
             </button>
           </form>
 
-          <div className="pt-3 border-t border-[#2B352E] text-[11px] text-[#8E9991] text-center">
-            Configurable in <code className="bg-[#101411] px-1.5 py-0.5 rounded font-mono text-[#EEF0EB]">.env</code> under <code className="font-mono font-semibold">ADMIN_PASSWORD</code>.
+          <div className="pt-3 border-t border-[#242D35] text-[11px] text-[#8F9CA8] text-center">
+            AbhigoCar secure operations access.
           </div>
         </div>
       </div>

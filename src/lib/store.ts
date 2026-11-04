@@ -28,7 +28,7 @@ class DataStore {
     seats?: number;
     search?: string;
     onlyActive?: boolean;
-    sort?: "price_asc" | "price_desc" | "newest" | "seats_desc";
+    sort?: "price_asc" | "price_desc" | "newest" | "seats_desc" | "seats_asc";
     startDate?: string;
     endDate?: string;
   }): Vehicle[] {
@@ -99,6 +99,8 @@ class DataStore {
       list = [...list].sort((a, b) => b.dailyPrice - a.dailyPrice);
     } else if (filters?.sort === "seats_desc") {
       list = [...list].sort((a, b) => b.seats - a.seats);
+    } else if (filters?.sort === "seats_asc") {
+      list = [...list].sort((a, b) => a.seats - b.seats);
     } else if (filters?.sort === "newest") {
       list = [...list].sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
