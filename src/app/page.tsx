@@ -50,7 +50,7 @@ export default function HomePage() {
 
     // 2. Re-fetch when admin updates or deletes vehicles
     const handleSync = () => fetchVehicles();
-    window.addEventListener("abhicargo_vehicles_synced", handleSync);
+    window.addEventListener("abhigocar_vehicles_synced", handleSync);
     window.addEventListener("storage", handleSync);
 
     // 3. Keep fresh with background interval
@@ -59,7 +59,7 @@ export default function HomePage() {
     return () => {
       isMounted = false;
       window.removeEventListener("focus", fetchVehicles);
-      window.removeEventListener("abhicargo_vehicles_synced", handleSync);
+      window.removeEventListener("abhigocar_vehicles_synced", handleSync);
       window.removeEventListener("storage", handleSync);
       clearInterval(interval);
     };
@@ -294,7 +294,7 @@ export default function HomePage() {
               Handover Procedure
             </span>
             <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white mt-1">
-              How Renting on abhicargo Works
+              How Renting on abhigocar Works
             </h2>
             <p className="text-xs sm:text-sm text-[#9CA3AF] mt-1">
               Direct verification and transparent vehicle handover designed for hassle-free travel.

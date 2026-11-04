@@ -3,8 +3,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy & Data Security | abhicargo",
-  description: "How abhicargo handles customer verification and identity records.",
+  title: "Privacy Policy & Data Security | abhigocar",
+  description: "How abhigocar handles customer verification and identity records.",
 };
 
 export default function PrivacyPage() {

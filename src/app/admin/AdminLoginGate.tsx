@@ -39,7 +39,7 @@ export function AdminLoginGate() {
         <div className="bg-[#161B22] rounded-2xl p-7 sm:p-8 shadow-xl space-y-6 text-[#F0F6FC] border border-[#30363D]">
           <div className="text-center space-y-2">
             <div className="w-14 h-14 rounded-2xl bg-white/[0.05] p-2 border border-[#30363D] flex items-center justify-center mx-auto shadow-md overflow-hidden">
-              <img src="/logo.png" alt="abhicargo logo" className="w-full h-full object-contain" />
+              <img src="/logo.png" alt="abhigocar logo" className="w-full h-full object-contain" />
             </div>
             <h1 className="font-display text-2xl font-extrabold text-white">
               Admin Dashboard
@@ -84,7 +84,7 @@ export function AdminLoginGate() {
           </form>
 
           <div className="pt-3 border-t border-[#30363D] text-[11px] text-[#8B949E] text-center">
-            abhicargo internal operations access.
+            abhigocar internal operations access.
           </div>
         </div>
       </div>

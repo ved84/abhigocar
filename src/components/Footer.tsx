@@ -15,7 +15,7 @@ export function Footer() {
               <div className="w-10 h-10 rounded-xl bg-white/[0.05] p-1.5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-sm">
                 <img
                   src="/logo.png"
-                  alt="abhicargo logo"
+                  alt="abhigocar logo"
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -127,7 +127,7 @@ export function Footer() {
 
         {/* Footer Bottom */}
         <div className="mt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-[#8B949E]">
-          <p>© 2026 abhicargo. All Rights Reserved.</p>
+          <p>© 2026 abhigocar. All Rights Reserved.</p>
           <p>WhatsApp Desk: +91 85389 18819</p>
         </div>
       </div>

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, ShieldCheck, FileText } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Rental Agreement Terms & Policies | abhicargo",
+  title: "Rental Agreement Terms & Policies | abhigocar",
   description: "Terms and conditions for self-drive and chauffeur vehicle rentals in Bihar.",
 };
 

@@ -80,14 +80,14 @@ export function HeroEnquiryBox({ vehicles }: HeroEnquiryBoxProps) {
     const phoneText = customerPhone.trim() || "Not provided";
     const datesText = travelDates.trim() || "Upcoming trip";
 
-    const message = `🚗 *New Car Enquiry - abhicargo*
+    const message = `🚗 *New Car Enquiry - abhigocar*
 • *Car Selected:* ${selectedCar}
 • *City / Pickup Hub:* ${district}
 • *Travel Dates:* ${datesText}
 • *Customer Name:* ${nameText}
 • *WhatsApp Number:* ${phoneText}
 
-Hello abhicargo team, I want to enquire about availability and booking for this car. Please guide me.`;
+Hello abhigocar team, I want to enquire about availability and booking for this car. Please guide me.`;
 
     const targetUrl = `https://wa.me/918538918819?text=${encodeURIComponent(message)}`;
     window.open(targetUrl, "_blank", "noopener,noreferrer");

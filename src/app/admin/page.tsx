@@ -6,7 +6,7 @@ import { AdminPageWrapper } from "./AdminPageWrapper";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard | abhicargo",
+  title: "Admin Dashboard | abhigocar",
   description: "Secure car operations and booking approval dashboard.",
 };
 

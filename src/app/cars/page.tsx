@@ -6,7 +6,7 @@ import { ExploreCarsClient } from "./ExploreCarsClient";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Explore Cars | abhicargo Car Rentals",
+  title: "Explore Cars | abhigocar Car Rentals",
   description:
     "Browse verified car rentals across all 38 districts of Bihar. Filter by category, transmission, fuel, and rental mode.",
 };

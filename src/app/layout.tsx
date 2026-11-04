@@ -5,11 +5,11 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "abhicargo | Self-Drive & Chauffeur Car Rentals in Bihar",
+  title: "abhigocar | Self-Drive & Chauffeur Car Rentals in Bihar",
   description:
     "Verified self-drive hatchbacks, executive sedans, 4x4 SUVs, and family MUVs across Patna, Gaya, Muzaffarpur, Darbhanga, and all 38 districts of Bihar. Direct WhatsApp booking: +91 85389 18819.",
   keywords: [
-    "abhicargo",
+    "abhigocar",
     "Bihar car rental",
     "self drive cars Patna",
     "car rental Gaya",
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
     "wedding luxury car Bihar",
     "car hire Darbhanga",
   ],
-  authors: [{ name: "abhicargo Team" }],
+  authors: [{ name: "abhigocar Team" }],
   openGraph: {
-    title: "abhicargo - Verified Cars Across Bihar",
+    title: "abhigocar - Verified Cars Across Bihar",
     description: "Explore verified cars across Patna, Gaya, Muzaffarpur, Bhagalpur, and all 38 districts with direct WhatsApp dispatch.",
     type: "website",
     locale: "en_IN",

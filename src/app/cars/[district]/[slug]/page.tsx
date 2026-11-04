@@ -63,11 +63,11 @@ export async function generateMetadata({
   const vehicle = await resolveVehicle(slug, district);
 
   if (!vehicle) {
-    return { title: "Vehicle Details | abhicargo" };
+    return { title: "Vehicle Details | abhigocar" };
   }
 
   return {
-    title: `Rent ${vehicle.year} ${vehicle.make} ${vehicle.model} in ${vehicle.locality}, Bihar | abhicargo`,
+    title: `Rent ${vehicle.year} ${vehicle.make} ${vehicle.model} in ${vehicle.locality}, Bihar | abhigocar`,
     description: `Rent ${vehicle.make} ${vehicle.model} ${vehicle.variant} in ${vehicle.locality}, ${vehicle.districtId}. Transparent pricing ₹${vehicle.dailyPrice}/day with 250 km included.`,
   };
 }

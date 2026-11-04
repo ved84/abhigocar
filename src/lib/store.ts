@@ -333,10 +333,10 @@ class DataStore {
       };
     }
 
-    // 3. Generate unique abhicargo reference: AC-YYYY-RANDOM4
+    // 3. Generate unique abhigocar reference: AG-YYYY-RANDOM4
     const year = new Date().getFullYear();
     const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    const bookingRef = `AC-${year}-${randomSuffix}`;
+    const bookingRef = `AG-${year}-${randomSuffix}`;
 
     const newBooking: Booking = {
       ...bookingData,
@@ -413,17 +413,17 @@ class DataStore {
 }
 
 // Global singleton instance
-const globalForStore = globalThis as unknown as { abhiCargoStore_v6?: DataStore };
+const globalForStore = globalThis as unknown as { abhiGoCarStore_v7?: DataStore };
 
 function getOrCreateStore(): DataStore {
-  if (globalForStore.abhiCargoStore_v6) {
+  if (globalForStore.abhiGoCarStore_v7) {
     // Re-link prototype in case Turbopack HMR updated the class definition
-    Object.setPrototypeOf(globalForStore.abhiCargoStore_v6, DataStore.prototype);
-    return globalForStore.abhiCargoStore_v6;
+    Object.setPrototypeOf(globalForStore.abhiGoCarStore_v7, DataStore.prototype);
+    return globalForStore.abhiGoCarStore_v7;
   }
   const instance = new DataStore();
   if (process.env.NODE_ENV !== "production") {
-    globalForStore.abhiCargoStore_v6 = instance;
+    globalForStore.abhiGoCarStore_v7 = instance;
   }
   return instance;
 }

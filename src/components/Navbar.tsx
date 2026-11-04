@@ -29,7 +29,7 @@ export function Navbar() {
             <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white/[0.05] p-1.5 border border-white/10 flex items-center justify-center overflow-hidden shrink-0 shadow-md">
               <img
                 src="/logo.png"
-                alt="abhicargo logo"
+                alt="abhigocar logo"
                 className="w-full h-full object-contain"
               />
             </div>

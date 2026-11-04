@@ -121,9 +121,9 @@ export function AdminDashboardClient({
 
   const notifyVehicleSync = () => {
     if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent("abhicargo_vehicles_synced"));
+      window.dispatchEvent(new CustomEvent("abhigocar_vehicles_synced"));
       try {
-        localStorage.setItem("abhicargo_vehicles_last_updated", Date.now().toString());
+        localStorage.setItem("abhigocar_vehicles_last_updated", Date.now().toString());
       } catch {}
     }
   };
@@ -1271,7 +1271,7 @@ export function AdminDashboardClient({
             <div className="bg-[#161B22] rounded-2xl border border-[#30363D] max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5 text-[#F0F6FC] shadow-2xl">
               <div className="flex items-center justify-between pb-3 border-b border-[#30363D]">
                 <h3 id="car-modal-title" className="font-display text-lg font-bold text-white">
-                  {editingVehicleId ? "Edit Vehicle Listing & Rates" : "Add Vehicle to abhicargo"}
+                  {editingVehicleId ? "Edit Vehicle Listing & Rates" : "Add Vehicle to abhigocar"}
                 </h3>
                 <button
                   onClick={() => setShowAddCarModal(false)}

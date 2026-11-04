@@ -66,7 +66,7 @@ export function CarDetailClient({
         body: JSON.stringify({
           vehicleId: vehicle.id,
           customerName: customerName.trim(),
-          customerEmail: `${customerPhone.replace(/[^0-9]/g, "")}@whatsapp.abhicargo.com`,
+          customerEmail: `${customerPhone.replace(/[^0-9]/g, "")}@whatsapp.abhigocar.com`,
           customerPhone: customerPhone.trim(),
           customerCity: vehicle.districtId,
           startDate,
@@ -87,7 +87,7 @@ export function CarDetailClient({
 
       const modeLabel = rentalMode === "SELF_DRIVE" ? "Self-Drive" : "With Chauffeur";
 
-      const message = `🚗 *New Car Enquiry - abhicargo*
+      const message = `🚗 *New Car Enquiry - abhigocar*
 • *Car:* ${vehicle.make} ${vehicle.model} (${vehicle.variant})
 • *Enquiry Ref:* ${bookingRef}
 • *Rental Dates:* ${startDate} to ${endDate} (${totalDays} Day${totalDays > 1 ? "s" : ""})
@@ -96,7 +96,7 @@ export function CarDetailClient({
 • *Customer Name:* ${customerName.trim()}
 • *WhatsApp Number:* ${customerPhone.trim()}
 
-Hello abhicargo team, I want to enquire about availability for this car. Please share the details on WhatsApp.`;
+Hello abhigocar team, I want to enquire about availability for this car. Please share the details on WhatsApp.`;
 
       const targetWhatsApp = `https://wa.me/918538918819?text=${encodeURIComponent(message)}`;
       setWhatsAppUrl(targetWhatsApp);
@@ -105,14 +105,14 @@ Hello abhicargo team, I want to enquire about availability for this car. Please 
       window.open(targetWhatsApp, "_blank");
     } catch {
       const modeLabel = rentalMode === "SELF_DRIVE" ? "Self-Drive" : "With Chauffeur";
-      const message = `🚗 *New Car Enquiry - abhicargo*
+      const message = `🚗 *New Car Enquiry - abhigocar*
 • *Car:* ${vehicle.make} ${vehicle.model} (${vehicle.variant})
 • *Rental Dates:* ${startDate} to ${endDate}
 • *Drive Mode:* ${modeLabel}
 • *Customer Name:* ${customerName.trim()}
 • *WhatsApp Number:* ${customerPhone.trim()}
 
-Hello abhicargo team, I want to enquire about this car.`;
+Hello abhigocar team, I want to enquire about this car.`;
       const targetWhatsApp = `https://wa.me/918538918819?text=${encodeURIComponent(message)}`;
       setWhatsAppUrl(targetWhatsApp);
       setBookingResult({ bookingRef: `AC-${Math.floor(1000 + Math.random() * 9000)}` });
@@ -249,17 +249,17 @@ Hello abhicargo team, I want to enquire about this car.`;
           </div>
         </div>
 
-        {/* abhicargo Hindi Booking Rules Card */}
+        {/* abhigocar Hindi Booking Rules Card */}
         <div className="glass-panel rounded-2xl p-6 sm:p-7 space-y-5 shadow-xl border border-white/10">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-pill text-[#FF6B64] text-xs font-bold mb-2">
-              <span>abhicargo • नियम एवं आवश्यक शर्तें</span>
+              <span>abhigocar • नियम एवं आवश्यक शर्तें</span>
             </div>
             <h3 className="font-display text-xl font-bold text-white">
               बुकिंग के लिए आवश्यक दस्तावेज़ और नियम
             </h3>
             <p className="text-xs text-[#8F9CA8] mt-0.5">
-              अभि कार्गो (abhicargo) - गाड़ी लेने से पहले ध्यानपूर्वक पढ़ लें
+              अभि गो कार (abhigocar) - गाड़ी लेने से पहले ध्यानपूर्वक पढ़ लें
             </p>
           </div>
 

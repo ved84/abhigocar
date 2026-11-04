@@ -20,11 +20,11 @@ export async function generateMetadata({
   const district = findDistrict(clean);
 
   if (!district) {
-    return { title: "Cars in District | abhicargo" };
+    return { title: "Cars in District | abhigocar" };
   }
 
   return {
-    title: `Car Rentals in ${district.name}, Bihar | abhicargo`,
+    title: `Car Rentals in ${district.name}, Bihar | abhigocar`,
     description: `Rent verified cars in ${district.name}, Bihar. Pickup at ${district.popularHubs.slice(0, 2).join(", ")}. Direct WhatsApp booking with included 250 km/day.`,
   };
 }

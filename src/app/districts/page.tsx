@@ -5,7 +5,7 @@ import { store } from "@/lib/store";
 import { Plane } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "All 38 Bihar Districts & Transit Hubs | abhicargo",
+  title: "All 38 Bihar Districts & Transit Hubs | abhigocar",
   description:
     "Comprehensive car rental network covering all 38 districts of Bihar. Operating at Jay Prakash Narayan Airport (PAT), Darbhanga Airport (DHR), Gaya Airport (GAY), and regional transit hubs.",
 };
