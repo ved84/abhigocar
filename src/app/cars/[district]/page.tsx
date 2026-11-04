@@ -1,13 +1,14 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { connection } from "next/server";
 import { BIHAR_DISTRICTS, findDistrict } from "@/data/districts";
 import { store } from "@/lib/store";
 import { INITIAL_VEHICLES } from "@/data/mockVehicles";
 import { VehicleCard } from "@/components/VehicleCard";
 import { SearchPanel } from "@/components/SearchPanel";
 import { MapPin, Navigation, ArrowLeft } from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -33,7 +34,6 @@ export default async function DistrictPage({
 }: {
   params: Promise<{ district: string }>;
 }) {
-  await connection();
   const { district: slug } = await params;
   const clean = decodeURIComponent(slug).toLowerCase().trim();
   const district = findDistrict(clean);

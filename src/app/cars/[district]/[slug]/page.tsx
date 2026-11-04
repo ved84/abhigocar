@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { connection } from "next/server";
 import { store } from "@/lib/store";
 import { findDistrict } from "@/data/districts";
 import { getVehiclesData } from "@/lib/firebaseDb";
@@ -10,6 +9,8 @@ import { INITIAL_VEHICLES } from "@/data/mockVehicles";
 import { CarDetailClient } from "./CarDetailClient";
 import { ArrowLeft } from "lucide-react";
 import { Vehicle } from "@/types";
+
+export const dynamic = "force-dynamic";
 
 async function resolveVehicle(slug: string, districtSlug?: string): Promise<Vehicle | undefined> {
   const cleanSlug = decodeURIComponent(slug).toLowerCase().trim();
@@ -76,7 +77,6 @@ export default async function CarDetailPage({
 }: {
   params: Promise<{ district: string; slug: string }>;
 }) {
-  await connection();
   const { district: districtSlug, slug } = await params;
   const vehicle = await resolveVehicle(slug, districtSlug);
 

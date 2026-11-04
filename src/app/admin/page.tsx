@@ -3,6 +3,8 @@ import { store } from "@/lib/store";
 import { INITIAL_VEHICLES } from "@/data/mockVehicles";
 import { AdminPageWrapper } from "./AdminPageWrapper";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Admin Dashboard | abhicargo",
   description: "Secure car operations and booking approval dashboard.",

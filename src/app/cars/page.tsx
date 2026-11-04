@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import { store } from "@/lib/store";
 import { ExploreCarsClient } from "./ExploreCarsClient";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Explore Cars | abhicargo Car Rentals",
   description:

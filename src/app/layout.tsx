@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -41,7 +42,9 @@ export default function RootLayout({
         />
       </head>
       <body suppressHydrationWarning className="min-h-screen flex flex-col bg-[#0D1117] text-[#F0F6FC] selection:bg-[#C63832] selection:text-white">
-        <Navbar />
+        <Suspense fallback={<header className="h-16 sm:h-20 bg-[#0D1117] border-b border-[#30363D]" />}>
+          <Navbar />
+        </Suspense>
         <main className="flex-grow">{children}</main>
         <Footer />
       </body>
