@@ -21,7 +21,12 @@ export async function getVehiclesData(): Promise<Vehicle[]> {
     try {
       const snap = await getDocs(collection(db, VEHICLES_COLLECTION));
       if (!snap.empty) {
-        return snap.docs.map((d) => d.data() as Vehicle);
+        const firestoreVehicles = snap.docs.map((d) => d.data() as Vehicle);
+        // Use replaceVehicles so deleted cars in Firestore are immediately removed from store
+        store.replaceVehicles(firestoreVehicles);
+        return store.getVehicles({ onlyActive: false });
+      } else {
+        return store.getVehicles({ onlyActive: false });
       }
     } catch (error) {
       console.warn("Firestore read failed, falling back to local dataset:", error);
@@ -41,11 +46,21 @@ export async function saveVehicleToFirestore(vehicle: Vehicle): Promise<void> {
   }
 }
 
-// Delete a vehicle from Firestore
+// Delete a vehicle from Firestore and store
 export async function deleteVehicleFromFirestore(vehicleId: string): Promise<void> {
+  // Guarantee removal from memory store immediately
+  store.deleteVehicle(vehicleId);
+
   if (isFirebaseConfigured && db) {
     try {
       await deleteDoc(doc(db, VEHICLES_COLLECTION, vehicleId));
+      const snap = await getDocs(collection(db, VEHICLES_COLLECTION));
+      for (const d of snap.docs) {
+        const data = d.data() as Vehicle;
+        if (data.id === vehicleId || data.slug === vehicleId) {
+          await deleteDoc(d.ref).catch(() => {});
+        }
+      }
     } catch (error) {
       console.warn("Firestore delete failed:", error);
     }

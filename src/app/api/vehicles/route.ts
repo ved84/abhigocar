@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { store } from "@/lib/store";
 import { getSession } from "@/lib/auth";
-import { saveVehicleToFirestore } from "@/lib/firebaseDb";
+import { saveVehicleToFirestore, getVehiclesData } from "@/lib/firebaseDb";
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -18,6 +18,9 @@ export async function GET(req: Request) {
   const maxPrice = searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined;
   const seats = searchParams.get("seats") ? Number(searchParams.get("seats")) : undefined;
   const includeInactive = searchParams.get("includeInactive") === "true";
+
+  // Sync latest vehicles from database if available
+  await getVehiclesData().catch(() => {});
 
   const session = await getSession();
   const onlyActive = includeInactive && session?.role === "ADMIN" ? false : true;
@@ -38,7 +41,16 @@ export async function GET(req: Request) {
     onlyActive,
   });
 
-  return NextResponse.json({ vehicles, total: vehicles.length });
+  return NextResponse.json(
+    { vehicles, total: vehicles.length },
+    {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
+      },
+    }
+  );
 }
 
 export async function POST(req: Request) {

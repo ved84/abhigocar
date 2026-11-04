@@ -2,16 +2,55 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { store } from "@/lib/store";
 import { findDistrict } from "@/data/districts";
+import { getVehiclesData } from "@/lib/firebaseDb";
+import { INITIAL_VEHICLES } from "@/data/mockVehicles";
 import { CarDetailClient } from "./CarDetailClient";
 import { ArrowLeft } from "lucide-react";
+import { Vehicle } from "@/types";
 
-export function generateStaticParams() {
-  return store.getVehicles({ onlyActive: false }).map((v) => ({
-    district: v.districtId,
-    slug: v.slug,
-  }));
+async function resolveVehicle(slug: string, districtSlug?: string): Promise<Vehicle | undefined> {
+  const cleanSlug = decodeURIComponent(slug).toLowerCase().trim();
+
+  // 1. Check in-memory store by slug or ID
+  let vehicle = store.getVehicleBySlug(cleanSlug) || store.getVehicleById(cleanSlug);
+
+  // 2. Fallback to Firestore DB if available
+  if (!vehicle) {
+    try {
+      const dbVehicles = await getVehiclesData();
+      if (Array.isArray(dbVehicles) && dbVehicles.length > 0) {
+        if (typeof store.syncVehicles === "function") {
+          store.syncVehicles(dbVehicles);
+        }
+        vehicle = store.getVehicleBySlug(cleanSlug) || store.getVehicleById(cleanSlug);
+      }
+    } catch {}
+  }
+
+  // 3. Guaranteed fallback to INITIAL_VEHICLES (mock data)
+  if (!vehicle) {
+    vehicle = INITIAL_VEHICLES.find(
+      (v) =>
+        v.slug.toLowerCase().trim() === cleanSlug ||
+        v.id.toLowerCase().trim() === cleanSlug ||
+        cleanSlug.includes(v.slug.toLowerCase().trim()) ||
+        v.slug.toLowerCase().trim().includes(cleanSlug)
+    );
+    if (vehicle && typeof store.syncVehicles === "function") {
+      store.syncVehicles([vehicle]);
+    }
+  }
+
+  // 4. Try matching with districtSlug if provided
+  if (!vehicle && districtSlug) {
+    const cleanDistrict = decodeURIComponent(districtSlug).toLowerCase().trim();
+    vehicle = store.getVehicleBySlug(cleanDistrict) || store.getVehicleById(cleanDistrict);
+  }
+
+  return vehicle;
 }
 
 export async function generateMetadata({
@@ -19,15 +58,15 @@ export async function generateMetadata({
 }: {
   params: Promise<{ district: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const vehicle = store.getVehicleBySlug(slug) || store.getVehicleById(slug);
+  const { district, slug } = await params;
+  const vehicle = await resolveVehicle(slug, district);
 
   if (!vehicle) {
-    return { title: "Vehicle Not Found | BiharDrive" };
+    return { title: "Vehicle Details | abhicargo" };
   }
 
   return {
-    title: `Rent ${vehicle.year} ${vehicle.make} ${vehicle.model} in ${vehicle.locality}, Bihar | BiharDrive`,
+    title: `Rent ${vehicle.year} ${vehicle.make} ${vehicle.model} in ${vehicle.locality}, Bihar | abhicargo`,
     description: `Rent ${vehicle.make} ${vehicle.model} ${vehicle.variant} in ${vehicle.locality}, ${vehicle.districtId}. Transparent pricing ₹${vehicle.dailyPrice}/day with 250 km included.`,
   };
 }
@@ -37,8 +76,9 @@ export default async function CarDetailPage({
 }: {
   params: Promise<{ district: string; slug: string }>;
 }) {
+  await connection();
   const { district: districtSlug, slug } = await params;
-  const vehicle = store.getVehicleBySlug(slug) || store.getVehicleById(slug);
+  const vehicle = await resolveVehicle(slug, districtSlug);
 
   if (!vehicle) {
     notFound();
@@ -57,7 +97,7 @@ export default async function CarDetailPage({
             All Cars
           </Link>
           <span>/</span>
-          <Link href={`/cars/${vehicle.districtId}`} className="hover:text-[#C63832] capitalize transition-colors">
+          <Link href={`/cars/${vehicle.districtId.toLowerCase()}`} className="hover:text-[#C63832] capitalize transition-colors">
             {district ? district.name : vehicle.districtId}
           </Link>
           <span>/</span>

@@ -218,7 +218,7 @@ function MyBookingsContent() {
             {/* Direct WhatsApp Follow-up Button */}
             <div className="pt-2">
               <a
-                href={`https://wa.me/918538918819?text=${encodeURIComponent(`Hi AbhigoCar team, checking status on my booking ref: ${booking.bookingRef}`)}`}
+                href={`https://wa.me/918538918819?text=${encodeURIComponent(`Hi abhicargo team, checking status on my booking ref: ${booking.bookingRef}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold transition-colors shadow-md"

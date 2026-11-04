@@ -1,28 +1,14 @@
 import type { Metadata } from "next";
-import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-display",
-  display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const jakartaSans = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "AbhigoCar | Premium Car Rentals in Bihar - Direct WhatsApp Booking",
+  title: "abhicargo | Self-Drive & Chauffeur Car Rentals in Bihar",
   description:
-    "Rent verified self-drive hatchbacks, executive sedans, 4x4 SUVs, and family MUVs across Patna, Gaya, Muzaffarpur, Darbhanga, and all 38 districts of Bihar. Instant WhatsApp booking: +91 85389 18819.",
+    "Verified self-drive hatchbacks, executive sedans, 4x4 SUVs, and family MUVs across Patna, Gaya, Muzaffarpur, Darbhanga, and all 38 districts of Bihar. Direct WhatsApp booking: +91 85389 18819.",
   keywords: [
-    "AbhigoCar",
+    "abhicargo",
     "Bihar car rental",
     "self drive cars Patna",
     "car rental Gaya",
@@ -30,10 +16,10 @@ export const metadata: Metadata = {
     "wedding luxury car Bihar",
     "car hire Darbhanga",
   ],
-  authors: [{ name: "AbhigoCar Team" }],
+  authors: [{ name: "abhicargo Team" }],
   openGraph: {
-    title: "AbhigoCar - Premium Car Rentals in Bihar",
-    description: "Explore verified cars across Patna, Gaya, Muzaffarpur, Bhagalpur, and all 38 districts with instant WhatsApp booking.",
+    title: "abhicargo - Verified Cars Across Bihar",
+    description: "Explore verified cars across Patna, Gaya, Muzaffarpur, Bhagalpur, and all 38 districts with direct WhatsApp dispatch.",
     type: "website",
     locale: "en_IN",
   },
@@ -45,8 +31,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${outfit.variable} ${jakartaSans.variable}`}>
-      <body suppressHydrationWarning className="min-h-screen flex flex-col bg-[#0E1216] text-[#F1F4F7] selection:bg-[#C63832] selection:text-white">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body suppressHydrationWarning className="min-h-screen flex flex-col bg-[#0D1117] text-[#F0F6FC] selection:bg-[#C63832] selection:text-white">
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />

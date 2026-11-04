@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, ShieldCheck, FileText } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Rental Agreement Terms & Policies | BiharDrive",
+  title: "Rental Agreement Terms & Policies | abhicargo",
   description: "Terms and conditions for self-drive and chauffeur vehicle rentals in Bihar.",
 };
 
@@ -51,9 +51,9 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="font-serif text-base font-bold text-[#202622]">4. Speed Limits & Telematics</h2>
+            <h2 className="font-display text-base font-bold text-[#202622]">4. Speed Limits & Safety</h2>
             <p>
-              All fleet vehicles are equipped with statutory speed governing telematics. A maximum speed limit of 100 km/h applies on highways. Sustained overspeeding generates automated dispatch warnings and may incur a violation fee.
+              All rental cars are equipped with speed monitoring devices. A maximum speed limit of 100 km/h applies on highways. Sustained overspeeding generates automated warnings and may incur a violation fee.
             </p>
           </section>
 

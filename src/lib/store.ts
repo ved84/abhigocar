@@ -14,6 +14,17 @@ class DataStore {
     this.bookings = [...INITIAL_BOOKINGS];
     this.availabilityBlocks = [...INITIAL_AVAILABILITY_BLOCKS];
     this.inquiries = [...INITIAL_INQUIRIES];
+
+    this.syncVehicles = this.syncVehicles.bind(this);
+    this.replaceVehicles = this.replaceVehicles.bind(this);
+    this.getVehicles = this.getVehicles.bind(this);
+    this.getVehicleBySlug = this.getVehicleBySlug.bind(this);
+    this.getVehicleById = this.getVehicleById.bind(this);
+    this.addVehicle = this.addVehicle.bind(this);
+    this.updateVehicle = this.updateVehicle.bind(this);
+    this.deleteVehicle = this.deleteVehicle.bind(this);
+    this.resetToInitialVehicles = this.resetToInitialVehicles.bind(this);
+    this.seedDummyVehicles = this.seedDummyVehicles.bind(this);
   }
 
   // --- VEHICLES ---
@@ -111,11 +122,48 @@ class DataStore {
   }
 
   getVehicleBySlug(slug: string): Vehicle | undefined {
-    return this.vehicles.find((v) => v.slug === slug);
+    if (!slug) return undefined;
+    const clean = decodeURIComponent(slug).toLowerCase().trim().replace(/\/+$/, "");
+    return this.vehicles.find((v) => {
+      const vSlug = v.slug.toLowerCase().trim();
+      const vId = v.id.toLowerCase().trim();
+      return (
+        vSlug === clean ||
+        vId === clean ||
+        clean.endsWith(vSlug) ||
+        clean.includes(vSlug)
+      );
+    });
   }
 
   getVehicleById(id: string): Vehicle | undefined {
-    return this.vehicles.find((v) => v.id === id);
+    if (!id) return undefined;
+    const clean = decodeURIComponent(id).toLowerCase().trim().replace(/\/+$/, "");
+    return this.vehicles.find((v) => {
+      const vId = v.id.toLowerCase().trim();
+      const vSlug = v.slug.toLowerCase().trim();
+      return vId === clean || vSlug === clean;
+    });
+  }
+
+  syncVehicles(incoming: Vehicle[]): void {
+    if (!Array.isArray(incoming) || incoming.length === 0) return;
+    for (const v of incoming) {
+      const idx = this.vehicles.findIndex(
+        (existing) => existing.id === v.id || existing.slug === v.slug
+      );
+      if (idx !== -1) {
+        this.vehicles[idx] = { ...this.vehicles[idx], ...v };
+      } else {
+        this.vehicles.push(v);
+      }
+    }
+  }
+
+  replaceVehicles(incoming: Vehicle[]): void {
+    if (Array.isArray(incoming)) {
+      this.vehicles = [...incoming];
+    }
   }
 
   addVehicle(vehicleData: Omit<Vehicle, "id" | "createdAt" | "updatedAt">): Vehicle {
@@ -130,7 +178,7 @@ class DataStore {
   }
 
   updateVehicle(id: string, updates: Partial<Vehicle>): Vehicle | null {
-    const idx = this.vehicles.findIndex((v) => v.id === id);
+    const idx = this.vehicles.findIndex((v) => v.id === id || v.slug === id);
     if (idx === -1) return null;
     this.vehicles[idx] = {
       ...this.vehicles[idx],
@@ -141,9 +189,31 @@ class DataStore {
   }
 
   deleteVehicle(id: string): boolean {
+    if (!id) return false;
+    const clean = id.trim().toLowerCase();
     const initialLen = this.vehicles.length;
-    this.vehicles = this.vehicles.filter((v) => v.id !== id);
+    this.vehicles = this.vehicles.filter(
+      (v) => v.id.toLowerCase() !== clean && v.slug.toLowerCase() !== clean
+    );
     return this.vehicles.length < initialLen;
+  }
+
+  seedDummyVehicles(): Vehicle[] {
+    const existingIds = new Set(this.vehicles.map((v) => v.id));
+    for (const v of INITIAL_VEHICLES) {
+      if (!existingIds.has(v.id)) {
+        this.vehicles.push(v);
+      }
+    }
+    if (this.vehicles.length === 0) {
+      this.vehicles = [...INITIAL_VEHICLES];
+    }
+    return [...this.vehicles];
+  }
+
+  resetToInitialVehicles(): Vehicle[] {
+    this.vehicles = [...INITIAL_VEHICLES];
+    return [...this.vehicles];
   }
 
   // --- AVAILABILITY & CONFLICT PREVENTION ---
@@ -263,10 +333,10 @@ class DataStore {
       };
     }
 
-    // 3. Generate unique BiharDrive reference: BD-YYYY-RANDOM4
+    // 3. Generate unique abhicargo reference: AC-YYYY-RANDOM4
     const year = new Date().getFullYear();
     const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    const bookingRef = `BD-${year}-${randomSuffix}`;
+    const bookingRef = `AC-${year}-${randomSuffix}`;
 
     const newBooking: Booking = {
       ...bookingData,
@@ -343,6 +413,19 @@ class DataStore {
 }
 
 // Global singleton instance
-const globalForStore = globalThis as unknown as { biharDriveStore: DataStore };
-export const store = globalForStore.biharDriveStore || new DataStore();
-if (process.env.NODE_ENV !== "production") globalForStore.biharDriveStore = store;
+const globalForStore = globalThis as unknown as { abhiCargoStore_v6?: DataStore };
+
+function getOrCreateStore(): DataStore {
+  if (globalForStore.abhiCargoStore_v6) {
+    // Re-link prototype in case Turbopack HMR updated the class definition
+    Object.setPrototypeOf(globalForStore.abhiCargoStore_v6, DataStore.prototype);
+    return globalForStore.abhiCargoStore_v6;
+  }
+  const instance = new DataStore();
+  if (process.env.NODE_ENV !== "production") {
+    globalForStore.abhiCargoStore_v6 = instance;
+  }
+  return instance;
+}
+
+export const store = getOrCreateStore();

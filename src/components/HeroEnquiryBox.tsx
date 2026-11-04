@@ -1,29 +1,77 @@
 "use client";
 
-import { useState } from "react";
-import { MessageCircle, CheckCircle2, ShieldCheck, Sparkles } from "lucide-react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { MessageCircle, CheckCircle2, ShieldCheck } from "lucide-react";
+import { Vehicle } from "@/types";
 
-const POPULAR_FLEET = [
-  { name: "Honda City ZX (Sedan)", slug: "honda-city-zx-muzaffarpur", district: "muzaffarpur" },
-  { name: "Mahindra Scorpio-N 4x4 (SUV)", slug: "mahindra-scorpio-n-z8l-darbhanga", district: "darbhanga" },
-  { name: "Toyota Innova Crysta (7-Seater)", slug: "toyota-innova-crysta-zx-patna", district: "patna" },
-  { name: "Mahindra Thar 4x4 (Off-Roader)", slug: "mahindra-thar-lx-4x4-gaya", district: "gaya" },
-  { name: "Hyundai Creta SX(O) (SUV)", slug: "hyundai-creta-sxo-patna", district: "patna" },
+const FALLBACK_POPULAR_FLEET = [
   { name: "Maruti Suzuki Swift (Hatchback)", slug: "maruti-swift-zxi-patna", district: "patna" },
+  { name: "Honda City ZX (Executive Sedan)", slug: "honda-city-zx-muzaffarpur", district: "muzaffarpur" },
+  { name: "Mahindra Scorpio-N 4x4 (SUV)", slug: "mahindra-scorpio-n-z8l-darbhanga", district: "darbhanga" },
+  { name: "Toyota Innova Crysta (7-Seater MUV)", slug: "toyota-innova-crysta-zx-patna", district: "patna" },
+  { name: "Hyundai Creta SX(O) (Compact SUV)", slug: "hyundai-creta-sxo-patna", district: "patna" },
+  { name: "Maruti Suzuki Brezza ZXi (Compact SUV)", slug: "maruti-brezza-zxi-muzaffarpur", district: "muzaffarpur" },
+  { name: "Mahindra Thar 4x4 (Off-Roader)", slug: "mahindra-thar-lx-4x4-gaya", district: "gaya" },
   { name: "Maruti Suzuki Baleno Alpha (Hatchback)", slug: "maruti-baleno-alpha-gaya", district: "gaya" },
   { name: "Maruti Suzuki Ertiga (7-Seater MUV)", slug: "maruti-ertiga-zxi-patna", district: "patna" },
   { name: "Toyota Fortuner Legender (VIP SUV)", slug: "toyota-fortuner-legender-purnia", district: "purnia" },
   { name: "Tata Nexon EV (Electric SUV)", slug: "tata-nexon-ev-empowered-bhagalpur", district: "bhagalpur" },
   { name: "Audi A6 Luxury (Wedding / VIP)", slug: "audi-a6-matrix-patna-wedding", district: "patna" },
+  { name: "Maruti Suzuki Dzire (Executive Sedan)", slug: "maruti-dzire-zxi-patna-airport", district: "patna" },
 ];
 
-export function HeroEnquiryBox() {
-  const [selectedCar, setSelectedCar] = useState(POPULAR_FLEET[0].name);
-  const [district, setDistrict] = useState("Patna (Airport / Station)");
+interface HeroEnquiryBoxProps {
+  vehicles?: Vehicle[];
+}
+
+export function HeroEnquiryBox({ vehicles }: HeroEnquiryBoxProps) {
+  const [fleetOptions, setFleetOptions] = useState<{ name: string; slug: string; district: string }[]>(() => {
+    if (vehicles && vehicles.length > 0) {
+      return vehicles.map((v) => ({
+        name: `${v.make} ${v.model} ${v.variant ? `(${v.variant})` : ""}`,
+        slug: v.slug,
+        district: v.districtId,
+      }));
+    }
+    return FALLBACK_POPULAR_FLEET;
+  });
+
+  const [selectedCar, setSelectedCar] = useState(fleetOptions[0]?.name || FALLBACK_POPULAR_FLEET[0].name);
+  const [district, setDistrict] = useState("Patna (Airport / Railway Station / City)");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [travelDates, setTravelDates] = useState("");
+
+  useEffect(() => {
+    if (vehicles && vehicles.length > 0) {
+      const mapped = vehicles
+        .filter((v) => v.isActive)
+        .map((v) => ({
+          name: `${v.make} ${v.model} ${v.variant ? `(${v.variant})` : ""}`,
+          slug: v.slug,
+          district: v.districtId,
+        }));
+      if (mapped.length > 0) {
+        setFleetOptions(mapped);
+        setSelectedCar((prev) => (mapped.some((m) => m.name === prev) ? prev : mapped[0].name));
+      }
+    } else {
+      fetch("/api/vehicles")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.vehicles && data.vehicles.length > 0) {
+            const mapped: { name: string; slug: string; district: string }[] = data.vehicles.map((v: Vehicle) => ({
+              name: `${v.make} ${v.model} ${v.variant ? `(${v.variant})` : ""}`,
+              slug: v.slug,
+              district: v.districtId,
+            }));
+            setFleetOptions(mapped);
+            setSelectedCar((prev) => (mapped.some((m) => m.name === prev) ? prev : mapped[0].name));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [vehicles]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,63 +80,49 @@ export function HeroEnquiryBox() {
     const phoneText = customerPhone.trim() || "Not provided";
     const datesText = travelDates.trim() || "Upcoming trip";
 
-    const message = `🚗 *New Car Enquiry - BiharDrive*
+    const message = `🚗 *New Car Enquiry - abhicargo*
 • *Car Selected:* ${selectedCar}
 • *City / Pickup Hub:* ${district}
 • *Travel Dates:* ${datesText}
 • *Customer Name:* ${nameText}
 • *WhatsApp Number:* ${phoneText}
 
-Hello BiharDrive team, I want to enquire about availability and booking for this car. Please guide me.`;
+Hello abhicargo team, I want to enquire about availability and booking for this car. Please guide me.`;
 
     const targetUrl = `https://wa.me/918538918819?text=${encodeURIComponent(message)}`;
-    window.open(targetUrl, "_blank");
+    window.open(targetUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-      className="glass-panel rounded-2xl p-6 sm:p-7 shadow-2xl space-y-5 relative overflow-hidden border border-white/10"
-    >
-      {/* Subtle top light refraction */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#C63832]/20 rounded-full blur-3xl pointer-events-none" />
-
+    <div className="bg-[#161B22] rounded-2xl p-5 sm:p-6 lg:p-7 shadow-xl space-y-4 border border-[#30363D] w-full">
       {/* Box Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] relative">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#E03E36] animate-ping" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[#FF6B64]">
-              Instant WhatsApp Dispatch
-            </span>
-          </div>
-          <h3 className="font-display text-2xl font-bold text-white mt-1">
-            Book or Enquire in 30 Seconds
-          </h3>
-        </div>
-        <span className="px-2.5 py-1 rounded-full glass-pill text-[11px] text-[#A6B2BC] font-semibold hidden sm:inline flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-[#FF6B64]" />
-          No DL Needed
+      <div className="pb-3 border-b border-[#30363D]">
+        <span className="text-[11px] font-bold uppercase tracking-wider text-[#E03E36] block">
+          Direct WhatsApp Desk
         </span>
+        <h3 className="font-display text-xl sm:text-2xl font-bold text-white mt-0.5">
+          Reserve Car or Check Dates
+        </h3>
+        <p className="text-xs text-[#9CA3AF] mt-1">
+          Pick your car and city. Our team replies on WhatsApp within minutes.
+        </p>
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-3.5 text-xs relative">
+      <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
         {/* Car Select */}
-        <div className="space-y-1.5">
-          <label className="font-bold text-[#A6B2BC] block text-[11px] uppercase tracking-wider">
-            1. Select Car Model
+        <div className="space-y-1">
+          <label htmlFor="hero-car-select" className="font-bold text-[#C9D1D9] block text-xs">
+            1. Select Car Model ({fleetOptions.length} Cars Available)
           </label>
           <select
+            id="hero-car-select"
             value={selectedCar}
             onChange={(e) => setSelectedCar(e.target.value)}
-            className="w-full h-11 px-3 glass-input rounded-xl text-white font-medium cursor-pointer"
+            className="w-full h-10 px-3 bg-[#0D1117] border border-[#30363D] rounded-lg text-white font-medium cursor-pointer text-xs sm:text-sm focus-visible:ring-2 focus-visible:ring-[#C63832]"
           >
-            {POPULAR_FLEET.map((car) => (
-              <option key={car.name} value={car.name} className="bg-[#141A20] text-white">
+            {fleetOptions.map((car) => (
+              <option key={car.slug} value={car.name} className="bg-[#161B22] text-white">
                 {car.name}
               </option>
             ))}
@@ -96,104 +130,106 @@ Hello BiharDrive team, I want to enquire about availability and booking for this
         </div>
 
         {/* District / Hub */}
-        <div className="space-y-1.5">
-          <label className="font-bold text-[#A6B2BC] block text-[11px] uppercase tracking-wider">
-            2. District / Delivery Hub
+        <div className="space-y-1">
+          <label htmlFor="hero-district-select" className="font-bold text-[#C9D1D9] block text-xs">
+            2. Delivery Hub / District
           </label>
           <select
+            id="hero-district-select"
             value={district}
             onChange={(e) => setDistrict(e.target.value)}
-            className="w-full h-11 px-3 glass-input rounded-xl text-white font-medium cursor-pointer"
+            className="w-full h-10 px-3 bg-[#0D1117] border border-[#30363D] rounded-lg text-white font-medium cursor-pointer text-xs sm:text-sm focus-visible:ring-2 focus-visible:ring-[#C63832]"
           >
-            <option value="Patna (Airport / Railway Station / City)" className="bg-[#141A20] text-white">
-              Patna (Airport / Station / City)
+            <option value="Patna (Airport / Railway Station / City)" className="bg-[#161B22] text-white">
+              Patna (Airport / Station / Bailey Road)
             </option>
-            <option value="Gaya & Bodh Gaya (Airport & Temple Zone)" className="bg-[#141A20] text-white">
-              Gaya & Bodh Gaya (Airport & Temple Hub)
+            <option value="Gaya & Bodh Gaya (Airport & Temple Zone)" className="bg-[#161B22] text-white">
+              Gaya & Bodh Gaya (Airport & Station)
             </option>
-            <option value="Muzaffarpur (Commercial Axis / Station)" className="bg-[#141A20] text-white">
-              Muzaffarpur (Commercial Axis)
+            <option value="Muzaffarpur (Commercial Axis / Station)" className="bg-[#161B22] text-white">
+              Muzaffarpur (Zero Mile / Junction)
             </option>
-            <option value="Darbhanga (Airport / Mithila Hub)" className="bg-[#141A20] text-white">
+            <option value="Darbhanga (Airport / Mithila Hub)" className="bg-[#161B22] text-white">
               Darbhanga (Airport Terminal)
             </option>
-            <option value="Bhagalpur (Zero Mile / Vikramshila)" className="bg-[#141A20] text-white">
+            <option value="Bhagalpur (Zero Mile / Vikramshila)" className="bg-[#161B22] text-white">
               Bhagalpur (Zero Mile Hub)
             </option>
-            <option value="Purnia & Katihar" className="bg-[#141A20] text-white">Purnia & Katihar</option>
-            <option value="Begusarai & Samastipur" className="bg-[#141A20] text-white">Begusarai & Samastipur</option>
-            <option value="Other District in Bihar" className="bg-[#141A20] text-white">Other District in Bihar</option>
+            <option value="Purnia & Katihar" className="bg-[#161B22] text-white">Purnia & Katihar Hub</option>
+            <option value="Begusarai & Samastipur" className="bg-[#161B22] text-white">Begusarai & Samastipur Hub</option>
+            <option value="Other District in Bihar" className="bg-[#161B22] text-white">Other District in Bihar</option>
           </select>
         </div>
 
         {/* Name and Phone Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="space-y-1.5">
-            <label className="font-bold text-[#A6B2BC] block text-[11px] uppercase tracking-wider">
+          <div className="space-y-1">
+            <label htmlFor="hero-customer-name" className="font-bold text-[#C9D1D9] block text-xs">
               Your Name
             </label>
             <input
+              id="hero-customer-name"
               type="text"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               placeholder="e.g. Alok Kumar"
-              className="w-full h-11 px-3 glass-input rounded-xl text-white placeholder-[#5A6672]"
+              className="w-full h-10 px-3 clean-input rounded-lg text-white placeholder-[#6E7681] text-xs sm:text-sm"
               required
             />
           </div>
 
-          <div className="space-y-1.5">
-            <label className="font-bold text-[#A6B2BC] block text-[11px] uppercase tracking-wider">
+          <div className="space-y-1">
+            <label htmlFor="hero-customer-phone" className="font-bold text-[#C9D1D9] block text-xs">
               WhatsApp Number
             </label>
             <input
+              id="hero-customer-phone"
               type="tel"
               value={customerPhone}
               onChange={(e) => setCustomerPhone(e.target.value)}
               placeholder="e.g. 98350 12345"
-              className="w-full h-11 px-3 glass-input rounded-xl text-white placeholder-[#5A6672]"
+              className="w-full h-10 px-3 clean-input rounded-lg text-white placeholder-[#6E7681] text-xs sm:text-sm"
               required
             />
           </div>
         </div>
 
         {/* Travel Dates */}
-        <div className="space-y-1.5">
-          <label className="font-bold text-[#A6B2BC] block text-[11px] uppercase tracking-wider">
-            Tentative Travel Dates / Duration
+        <div className="space-y-1">
+          <label htmlFor="hero-travel-dates" className="font-bold text-[#C9D1D9] block text-xs">
+            Trip Dates / Duration
           </label>
           <input
+            id="hero-travel-dates"
             type="text"
             value={travelDates}
             onChange={(e) => setTravelDates(e.target.value)}
-            placeholder="e.g. Tomorrow for 3 days or 15 Nov to 18 Nov"
-            className="w-full h-11 px-3 glass-input rounded-xl text-white placeholder-[#5A6672]"
+            placeholder="e.g. 15 Nov to 18 Nov (3 days)"
+            className="w-full h-10 px-3 clean-input rounded-lg text-white placeholder-[#6E7681] text-xs sm:text-sm"
           />
         </div>
 
-        {/* Animated WhatsApp Direct Action Button */}
-        <motion.button
+        {/* Action Button */}
+        <button
           type="submit"
-          whileHover={{ scale: 1.02, boxShadow: "0 0 25px rgba(198, 56, 50, 0.45)" }}
-          whileTap={{ scale: 0.98 }}
-          className="w-full py-4 px-4 rounded-xl bg-gradient-to-r from-[#C63832] via-[#D83832] to-[#B02E28] text-white font-bold text-sm shadow-xl flex items-center justify-center gap-2 cursor-pointer mt-3 border border-red-400/30 transition-all"
+          className="w-full py-3.5 px-4 rounded-lg bg-[#C63832] hover:bg-[#E03E36] text-white font-bold text-xs sm:text-sm shadow-md flex items-center justify-center gap-2 cursor-pointer mt-3 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#C63832]"
         >
-          <MessageCircle className="w-4 h-4 fill-white" />
+          <MessageCircle className="w-4 h-4 fill-white shrink-0" />
           <span>Send Enquiry via WhatsApp (+91 85389 18819)</span>
-        </motion.button>
+        </button>
       </form>
 
       {/* Trust Line */}
-      <div className="pt-2 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-[#8F9CA8]">
+      <div className="pt-2 border-t border-[#30363D] flex items-center justify-between text-xs text-[#9CA3AF]">
         <span className="flex items-center gap-1.5">
-          <CheckCircle2 className="w-3.5 h-3.5 text-[#E03E36]" />
-          Instant WhatsApp response
+          <CheckCircle2 className="w-3.5 h-3.5 text-[#E03E36] shrink-0" />
+          Fast WhatsApp confirmation
         </span>
-        <span className="flex items-center gap-1">
-          <ShieldCheck className="w-3.5 h-3.5 text-[#E03E36]" />
-          All 38 Bihar Districts
+        <span className="flex items-center gap-1.5">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#E03E36] shrink-0" />
+          Yellow-plate commercial cars
         </span>
       </div>
-    </motion.div>
+    </div>
   );
 }

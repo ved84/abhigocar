@@ -18,7 +18,7 @@ export function AdminPageWrapper({
   initialBlocks: AvailabilityBlock[];
 }) {
   const [checking, setChecking] = useState(true);
-  const [adminUser, setAdminUser] = useState<any | null>(null);
+  const [adminUser, setAdminUser] = useState<{ id?: string; email?: string; role?: string; [key: string]: unknown } | null>(null);
 
   useEffect(() => {
     fetch("/api/auth/me")
@@ -36,11 +36,11 @@ export function AdminPageWrapper({
 
   if (checking) {
     return (
-      <div className="py-24 text-center space-y-3">
-        <div className="w-10 h-10 rounded-full bg-[#E2EBE5] text-[#20493A] flex items-center justify-center mx-auto animate-pulse">
-          <Shield className="w-5 h-5" />
+      <div className="min-h-[60vh] flex flex-col items-center justify-center bg-[#0D1117] text-center space-y-3 p-6">
+        <div className="w-10 h-10 rounded-xl bg-[#21262D] border border-[#30363D] text-[#E03E36] flex items-center justify-center mx-auto">
+          <Shield className="w-5 h-5 animate-spin" />
         </div>
-        <p className="text-xs text-[#59615B]">Checking administrator session...</p>
+        <p className="text-xs text-[#9CA3AF]">Checking administrator session...</p>
       </div>
     );
   }

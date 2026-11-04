@@ -66,7 +66,7 @@ export function CarDetailClient({
         body: JSON.stringify({
           vehicleId: vehicle.id,
           customerName: customerName.trim(),
-          customerEmail: `${customerPhone.replace(/[^0-9]/g, "")}@whatsapp.bihardrive.com`,
+          customerEmail: `${customerPhone.replace(/[^0-9]/g, "")}@whatsapp.abhicargo.com`,
           customerPhone: customerPhone.trim(),
           customerCity: vehicle.districtId,
           startDate,
@@ -79,7 +79,7 @@ export function CarDetailClient({
       });
 
       const data = await res.json();
-      const bookingRef = data.booking?.bookingRef || `BD-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      const bookingRef = data.booking?.bookingRef || `AC-2026-${Math.floor(1000 + Math.random() * 9000)}`;
 
       const totalDays = startDate && endDate
         ? Math.max(1, Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)))
@@ -87,7 +87,7 @@ export function CarDetailClient({
 
       const modeLabel = rentalMode === "SELF_DRIVE" ? "Self-Drive" : "With Chauffeur";
 
-      const message = `🚗 *New Car Enquiry - BiharDrive*
+      const message = `🚗 *New Car Enquiry - abhicargo*
 • *Car:* ${vehicle.make} ${vehicle.model} (${vehicle.variant})
 • *Enquiry Ref:* ${bookingRef}
 • *Rental Dates:* ${startDate} to ${endDate} (${totalDays} Day${totalDays > 1 ? "s" : ""})
@@ -96,7 +96,7 @@ export function CarDetailClient({
 • *Customer Name:* ${customerName.trim()}
 • *WhatsApp Number:* ${customerPhone.trim()}
 
-Hello BiharDrive team, I want to enquire about availability for this car. Please share the details on WhatsApp.`;
+Hello abhicargo team, I want to enquire about availability for this car. Please share the details on WhatsApp.`;
 
       const targetWhatsApp = `https://wa.me/918538918819?text=${encodeURIComponent(message)}`;
       setWhatsAppUrl(targetWhatsApp);
@@ -105,17 +105,17 @@ Hello BiharDrive team, I want to enquire about availability for this car. Please
       window.open(targetWhatsApp, "_blank");
     } catch {
       const modeLabel = rentalMode === "SELF_DRIVE" ? "Self-Drive" : "With Chauffeur";
-      const message = `🚗 *New Car Enquiry - BiharDrive*
+      const message = `🚗 *New Car Enquiry - abhicargo*
 • *Car:* ${vehicle.make} ${vehicle.model} (${vehicle.variant})
 • *Rental Dates:* ${startDate} to ${endDate}
 • *Drive Mode:* ${modeLabel}
 • *Customer Name:* ${customerName.trim()}
 • *WhatsApp Number:* ${customerPhone.trim()}
 
-Hello BiharDrive team, I want to enquire about this car.`;
+Hello abhicargo team, I want to enquire about this car.`;
       const targetWhatsApp = `https://wa.me/918538918819?text=${encodeURIComponent(message)}`;
       setWhatsAppUrl(targetWhatsApp);
-      setBookingResult({ bookingRef: `BD-${Math.floor(1000 + Math.random() * 9000)}` });
+      setBookingResult({ bookingRef: `AC-${Math.floor(1000 + Math.random() * 9000)}` });
       window.open(targetWhatsApp, "_blank");
     } finally {
       setSubmitting(false);
@@ -155,7 +155,7 @@ Hello BiharDrive team, I want to enquire about this car.`;
             <div className="flex items-center gap-2 mb-2">
               <span className="text-xs font-bold text-[#FF6B64] flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-[#E03E36]" />
-                Commercial Yellow-Plate Verified Fleet
+                Commercial Yellow-Plate Verified Car
               </span>
             </div>
 
@@ -249,17 +249,17 @@ Hello BiharDrive team, I want to enquire about this car.`;
           </div>
         </div>
 
-        {/* AbhigoCar Hindi Booking Rules Card */}
+        {/* abhicargo Hindi Booking Rules Card */}
         <div className="glass-panel rounded-2xl p-6 sm:p-7 space-y-5 shadow-xl border border-white/10">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-pill text-[#FF6B64] text-xs font-bold mb-2">
-              <span>AbhigoCar • नियम एवं आवश्यक शर्तें</span>
+              <span>abhicargo • नियम एवं आवश्यक शर्तें</span>
             </div>
             <h3 className="font-display text-xl font-bold text-white">
               बुकिंग के लिए आवश्यक दस्तावेज़ और नियम
             </h3>
             <p className="text-xs text-[#8F9CA8] mt-0.5">
-              अभिगो कार - गाड़ी लेने से पहले ध्यानपूर्वक पढ़ लें
+              अभि कार्गो (abhicargo) - गाड़ी लेने से पहले ध्यानपूर्वक पढ़ लें
             </p>
           </div>
 

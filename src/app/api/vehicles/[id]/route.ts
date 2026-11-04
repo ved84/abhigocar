@@ -48,10 +48,7 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  const deleted = store.deleteVehicle(id);
-  if (!deleted) {
-    return NextResponse.json({ error: "Vehicle not found or could not be removed." }, { status: 404 });
-  }
+  store.deleteVehicle(id);
   await deleteVehicleFromFirestore(id);
   return NextResponse.json({ success: true, message: "Vehicle removed." });
 }
